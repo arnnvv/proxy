@@ -6,7 +6,8 @@
     "put": "wrangler secret put"
   },
   "dependencies": {
-    "hono": "^4.4.9"
+    "hono": "^4.4.9",
+    "http-proxy-middleware": "^3.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
