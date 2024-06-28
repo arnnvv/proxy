@@ -1,5 +1,6 @@
 import { Context, Hono, Next, TypedResponse } from "hono";
 import { StatusCode } from "hono/utils/http-status";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 const app = new Hono<{
   Bindings: {
@@ -29,16 +30,21 @@ app.use(
     c.header("Access-Control-Allow-Credentials", "true");
     c.header("Access-Control-Expose-Headers", "Content-Length, Content-Range");
 
+    /*
+     * hono dosen't support proxy
+    createProxyMiddleware({
+      target: c.env.TARGET_URL,
+      changeOrigin: true,
+      onProxyReq: (proxyReq, req, res) => {},
+      onProxyRes: (proxyRes, req, res) => {},
+    });
+    */
     await next();
   },
 );
 
-app.get(
-  "/",
-  (c: Context): Response & TypedResponse<any, StatusCode, "text"> => {
-    console.log(c.env.TARGET_URL);
-    return c.text(c.env.TARGET_URL);
-  },
+app.get("/", (c: Context): Response & TypedResponse<any, StatusCode, "text"> =>
+  c.text(c.env.TARGET_URL),
 );
 
 export default app;
